@@ -13,14 +13,14 @@ class Turtle {
         this.pos = position;
         this.target = position.copy();
         this.col = color;
-        this.dir = 0; // radians
+        this.dir = 0; // degrees
 
         this.state = "rest"; // rest, drawing, moving
     }
 
     update() {
         if (this.pos.distance(this.target) < 1) return;
-        const v = this.target.copy().sub(this.pos).norm();
+        const v = this.target.copy().sub(this.pos).norm().mult(5);
         this.pos.add(v);
     }
 
@@ -37,14 +37,15 @@ class Turtle {
         ctx.stroke();
         ctx.restore();
         */
-        ctx.fillStyle = this.color;
+        ctx.fillStyle = this.col;
         ctx.beginPath();
-        ctx.arc(this.pos.x, this.pos.y, 2, 0, 2 * Math.PI);
+        ctx.arc(this.pos.x, this.pos.y, 5, 0, 2 * Math.PI);
         ctx.fill()
     }
 
     move(distance) {
-        const unit = new Vector(Math.cos(this.dir), Math.sin(this.dir));
+        const theta = this.dir * (Math.PI/180);
+        const unit = new Vector(Math.cos(theta), Math.sin(theta));
         const v = unit.mult(distance);
         this.target = this.pos.copy().add(v);
     }
@@ -52,8 +53,6 @@ class Turtle {
     turn(theta) {
         this.dir += theta;
     }
-
-
 
 
 }

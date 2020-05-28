@@ -1,7 +1,11 @@
 window.onload = function() {
     window.cnv = document.getElementById("canvas");
     window.ctx = cnv.getContext("2d");
-    window.t = new Turtle(new Vector(200, 200), '#000');
+    window.t = new Turtle(new Vector(200, 200), palette['black']);
+
+    ctx.fillStyle = palette['white'];
+    ctx.rect(0, 0, cnv.width, cnv.height);
+    ctx.fill();
 
     setInterval(function() {
         t.update();
@@ -18,6 +22,7 @@ window.onload = function() {
             const cmd = command.split(" ");
             if (cmd[0] === "move") t.move(parseInt(cmd[1]));
             if (cmd[0] === "turn") t.turn(parseInt(cmd[1]));
+            if (cmd[0] === "colour") t.col = palette[cmd[1]];
             ta_editor.value += command + "\n";
             inp_command.value = "";
         }
