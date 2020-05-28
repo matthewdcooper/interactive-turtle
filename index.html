@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+
+        <link rel="stylesheet" href="css/style.css">
+        <script src="js/vector.js" delay></script>
+        <script src="js/turtle.js" delay></script>
+        <script src="js/ui.js" delay></script>
+        <script src="js/main.js" delay></script>
+
+    </head>    
+
+    <body>
+        <div id="header">
+            <h1>Interactive Turtle</h1>
+        </div>
+        <div id="main">
+            <div id="ui">
+                <div id="editor">
+                    <textarea id="ta_editor" rows="30" cols="80"></textarea>
+                </div>
+                <div id="shell">
+                    <label for="inp_command">Enter command:</label>
+                    <input id="inp_command" type="text">
+                </div>
+            </div>
+            <div id="canvas-container">
+                <canvas id="canvas" width="800" height="800"></canvas>
+            </div>
+        </div>
+        <div id="footer"></div>
+
+    </body>
+</html>
