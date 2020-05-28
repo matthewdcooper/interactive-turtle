@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Interactive Turtle Prototype</title>
+
+    </head>
+    <body>
+        <canvas id="canvas" width="400" height="400"></canvas>
+        <hr>
+        <input id="inp_command" type="text" placeholder="enter command" />
+        <button onclick="runCommand();">do</button>
+
+<script>
+
+const cnv = document.getElementById("canvas");
+const ctx = cnv.getContext("2d");
+
+class Turtle {
+    constructor(x, y, color="#000") {
+        this.x = x;
+        this.y = y;
+        this.targetX = x;
+        this.targetY = y
+        this.color = color;
+        this.lines = [];
+        this.state = "rest"; // rest, drawing, moving
+    }
+
+    update() {
+        if (this.state === "rest") return;
+        if (this.state === "moving" || this.state === "drawing") {
+            if (this.x !== this.targetX) this.x += this.x < this.targetX ? 1 : -1;
+            if (this.y !== this.targetY) this.y += this.y < this.targetY ? 1 : -1;
+            if (this.x === this.targetX && this.y === this.targetY) {
+                this.state = "rest";
+            }
+        }
+        if (this.state === "drawing") {
+            let line = this.lines.pop();
+            line.endx = this.x;
+            line.endy = this.y;
+            this.lines.push(line);
+        }
+    }
+
+    show() {
+        // show previously drawn lines
+        for (let line of this.lines) drawLine(line);
+
+        // draws turtle at its current location
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 2, 0, 2 * Math.PI);
+        ctx.fill();
+    }
+
+    _setTarget(direction, distance) {
+        console.log(direction + distance);
+        switch (direction[0]) {
+            case "n":
+                this.targetY = this.y - distance;
+                break;
+            case "s":
+                this.targetY = this.y + distance;
+                break;
+            case "e":
+                this.targetX = this.x + distance;
+                break;
+            case "w":
+                this.targetX = this.x - distance;
+                break;
+        }
+    }
+
+    move(direction, distance) {
+        this.state = "moving";
+        this._setTarget(direction, distance);
+    }
+
+    draw(direction, distance) {
+        this.state = "drawing";
+        this._setTarget(direction, distance);
+        let line = {
+            startx: this.x,
+            starty: this.y,
+            endx: this.x,
+            endy: this.y,
+            color: this.color
+        }
+        this.lines.push(line);
+    }
+
+}
+
+const t = new Turtle(200, 200);
+
+function runCommand() {
+    let inp = document.getElementById("inp_command");
+    let cmd = inp.value
+                 .trim()
+                 .replace("  ", " ")
+                 .split(" ");
+    let direction;
+    let distance;
+
+    switch (cmd[0]) {
+        case "red":
+            t.color = "#f00";
+            break;
+        case "blue":
+            t.color = "#00f";
+            break;
+        case "black":
+            t.color = "#000";
+            break;
+        case "move":
+            [direction, distance] = [cmd[1], parseInt(cmd[2])];
+            t.move(direction, distance);
+            break;
+        case "draw":
+            [direction, distance] = [cmd[1], parseInt(cmd[2])];
+            t.draw(direction, distance);
+            break;
+    }
+
+    inp.value = "";
+
+
+}
+
+function drawLine(line) {
+    // takes a line object and draws it to canvas
+    ctx.beginPath();
+    ctx.strokeStyle = line.color;
+    ctx.moveTo(line.startx, line.starty);
+    ctx.lineTo(line.endx, line.endy);
+    ctx.stroke();
+}
+
+function draw() {
+    ctx.clearRect(0, 0, cnv.width, cnv.height);
+    t.update();
+    t.show();
+}
+
+setInterval(draw, 1000/30);
+
+
+
+
+</script>
+    </body>
+
+</html>
