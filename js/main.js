@@ -16,14 +16,13 @@ window.onload = function() {
     const inp_command = document.getElementById("inp_command");
     const ta_editor = document.getElementById("ta_editor");
 
+    parser = new Parser(t);
+
     inp_command.onkeyup = function(event) {
         if (event.key === "Enter") {
             const command = inp_command.value;
-            const cmd = command.split(" ");
-            if (cmd[0] === "move") t.move(parseInt(cmd[1]));
-            if (cmd[0] === "turn") t.turn(parseInt(cmd[1]));
-            if (cmd[0] === "colour") t.col = palette[cmd[1]];
-            ta_editor.value += command + "\n";
+            parser.parse(command)();
+            ta_editor.value += command + "\n"; // but what if it was an error?
             inp_command.value = "";
         }
 
